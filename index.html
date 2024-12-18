@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Listing</title>
+    <link href="./styles.css" rel="stylesheet" />
+    <script src="./app.js" defer></script>
+</head>
+<body>
+    <header>Product Listing Page</header>
+    <main>
+        <nav>
+            <div class="filter-header">Filters</div> 
+            <div class="filter-container categories">
+                <div class="filter-title">Categories</div>
+                <ul id="categories-filter"> 
+                    
+                </ul>
+            </div>
+        </nav>
+        <section class="search-sort-container">
+            <form name="filterform" action="" method="POST"></form>
+                <div id="total">
+                </div>
+                <div class="search-container">
+                    <input type="text" name="search" id="search" placeholder="Type Keyword.." onkeyup="searchProduct()">
+                </div>
+                <div class="sort-container">
+                    <select name="sorting" onChange="applySorting()">
+                    </select>
+                </div>
+            </form>
+        </section>
+        <div class="list-wrapper"></div>
+    </main>
+</body>
+</html>
