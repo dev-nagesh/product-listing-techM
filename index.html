@@ -6,33 +6,75 @@
     <title>Product Listing</title>
     <link href="./styles.css" rel="stylesheet" />
     <script src="./app.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <header>Product Listing Page</header>
+    <header>
+        <div class="logo">
+
+        </div>
+        <div class="menu-container">
+            <ul class="menu-list">
+                <li class="menu-item">Home</li>
+                <li class="menu-item">Women</li>
+                <li class="menu-item">Men</li>
+                <li class="menu-item">Smart Gear</li>
+                <li class="menu-item">Accessories</li>
+            </ul>
+        </div>
+        <div class="cart">
+
+        </div>
+    </header>
     <main>
         <nav>
-            <div class="filter-header">Filters</div> 
-            <div class="filter-container categories">
+            <div class="filter-header"><span class="material-icons" onClick="toggleFilters()">filter_alt</span>Filters</div> 
+            <div class="filter-container categories" id="categories">
                 <div class="filter-title">Categories</div>
                 <ul id="categories-filter"> 
-                    
+                    <li class="skeleton skeleton-category"></li>
+                    <li class="skeleton skeleton-category"></li>
+                    <li class="skeleton skeleton-category"></li>
+                    <li class="skeleton skeleton-category"></li>
                 </ul>
             </div>
         </nav>
         <section class="search-sort-container">
-            <form name="filterform" action="" method="POST"></form>
-                <div id="total">
+            <div id="total">
+            </div>
+            <div class="search-container">
+                <input type="text" name="search" id="search" placeholder="Type Keyword.." onkeyup="searchProduct()">
+            </div>
+            <div class="sort-container">
+                <div class="mobile-sort">
+                    <span class="material-icons ">sort</span>
                 </div>
-                <div class="search-container">
-                    <input type="text" name="search" id="search" placeholder="Type Keyword.." onkeyup="searchProduct()">
-                </div>
-                <div class="sort-container">
-                    <select name="sorting" onChange="applySorting()">
-                    </select>
-                </div>
-            </form>
+                <select name="sorting" onChange="applyfilters()">
+                </select>
+            </div>
         </section>
-        <div class="list-wrapper"></div>
+        <div class="list-wrapper">
+            <div class="list-item">
+                <div class="product-image-container skeleton">
+                </div>
+                <div class="product-info">
+                    <div class="product-title skeleton skeleton-text">
+                        
+                    </div>
+                    <div class="product-price skeleton skeleton-text">
+                    </div>
+                    <div class="favourite-wrapper skeleton skeleton-text">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="advertisement">
+
+        </div>
+        <a href="#" id="load-more" onclick="loadmoreProducts(event)">Load More..</a>
     </main>
 </body>
 </html>

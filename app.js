@@ -9,46 +9,51 @@ const SORT_OPTIONS=[
     {value:"a-z", title:"A-Z"},
     {value:"z-a", title:"Z-A"}
 ]
+const ITEMS_PER_PAGE = 10;
 const CURRENCY_SYMBOL= "$";
-let products=[];
 let masterProducts=[];
+let products=[];
 let totalProducts=0;
 let products_errors={};
 let categories=[];
 let productsWrapper = document.querySelector(".list-wrapper");
-let categoriesWrapper = document.querySelector("ul");
+let categoriesWrapper = document.querySelector(".categories ul");
+let loadMore = document.getElementById("load-more");
+let totalResults = document.getElementById('total');
 console.log(productsWrapper);
+const listWrapper=document.querySelector('.list-wrapper');
+const listItem = document.querySelector(".list-item");
+console.log(listWrapper,listItem);
+for(i=0; i<10; i++){
+    listWrapper.append(listItem.cloneNode(true));
+}
+// let query = window.matchMedia("(min-width: 480px)");
+// if(query.matches){
+//     alert("Match")
+// }
+
 const fetchProducts = async ()=>{
     try{
         const data = await fetch(PRODUCTS_API);
         const response = await data.json();
         if(response && response.length){
-            products = response;
             masterProducts = response;
+            products = response;
+            arrangeItemsPerPage();
             console.log(products);
             let list ='';
-            for(let product of products){
-                // Categories.
-                categoryIndex=categories.findIndex(category => product.category == category);
-                console.log(categoryIndex);
-                if(categoryIndex == -1){
-                    categories.push(product.category);
-                    const categoryLi = document.createElement("li");
-                    categoryLi.innerHTML=`
-                    <input type="checkbox" value="${product.category}" name="category" onChange="applyfilters()"> ${product.category} 
-                    `;
-                    categoriesWrapper.appendChild(categoryLi)
-                }
-            }
-            
-            buildProducts();
+            buildCategories();
+
         }
         else{
             products =[];
+            masterProducts =[];
         }
     }
     catch(error){
         products_errors=setError(products_errors,'API_ERROR');
+        products =[];
+        masterProducts =[];
     }
 }
 function applyfilters(){
@@ -56,21 +61,43 @@ function applyfilters(){
     // const formProps = Object.fromEntries(formData);
     let categoriesEle=Array.from(document.getElementsByName('category'));
     categories= categoriesEle.filter(el=>el.checked).map(el=>el.value);
-    products = masterProducts.filter(product => categories.includes(product.category))
-    buildProducts(products);
-
+    if(categories.length){
+        products = masterProducts.filter(product => categories.includes(product.category));
+    }
+    else{
+        products = masterProducts;
+    }
+    const searchKeyword = document.getElementById("search");
+    if(searchKeyword.value){
+        keywordSearch(searchKeyword.value,{arrangeItems:false})
+    }
+    let sortOption = document.querySelector('select[name=sorting]');
+    if(sortOption.value){
+        applySorting(sortOption.value, {arrangeItems:false})
+    }
+    arrangeItemsPerPage();
 }
-function applySorting(){
+const arrangeItemsPerPage = (clearWrapper)=>{
+    let displayProducts = []
+    if(products.length > ITEMS_PER_PAGE){
+        displayProducts = products.slice(0,ITEMS_PER_PAGE);
+    }
+    else
+        displayProducts = products;
+    buildProducts(displayProducts,clearWrapper);
+    showHideLoadMore(products,displayProducts.length);
+}
+function applySorting(sortOption,inputObj={arrangeItems:true}){
     sortOption = document.querySelector('select[name=sorting]');
     switch(sortOption.value){
         case 'price-l-h':
-            products = masterProducts.sort((a,b)=> a.price - b.price);
+            products = products.sort((a,b)=> a.price - b.price);
         break;
         case 'price-h-l':
-            products = masterProducts.sort((a,b)=> b.price - a.price);
+            products = products.sort((a,b)=> b.price - a.price);
         break;
         case 'a-z':
-            products = masterProducts.sort((a,b)=>{
+            products = products.sort((a,b)=>{
                 const titleA = a.title.toLowerCase(); 
                 const titleB = b.title.toLowerCase();
                 if (titleA < titleB) {
@@ -83,7 +110,7 @@ function applySorting(){
             });
         break;
         case 'z-a':
-            products = masterProducts.sort((a,b)=>{
+            products = products.sort((a,b)=>{
                 const titleA = a.title.toLowerCase(); 
                 const titleB = b.title.toLowerCase();
                 if (titleA > titleB) {
@@ -97,10 +124,14 @@ function applySorting(){
         break;
         default:
     }
-    buildProducts(products);
+    if(inputObj.arrangeItems){
+        arrangeItemsPerPage(true);
+    }
 }
-const buildProducts = (products=masterProducts)=>{
-    productsWrapper.innerText='';
+const buildProducts = (products=masterProducts, clearWrapper=true)=>{
+    if(clearWrapper){
+        productsWrapper.innerText='';
+    }
     for(let product of products){
         const listDiv=document.createElement("div");
         listDiv.classList.add('list-item');
@@ -108,19 +139,54 @@ const buildProducts = (products=masterProducts)=>{
         <div class="product-image-container">
             <img src="${product.image}" class="product-image">
         </div>
-        <div>
-            ${product.title}
-        </div>
-        <div>
-           ${CURRENCY_SYMBOL+product.price} 
+        <div class="product-info">
+            <div class="product-title">
+                ${product.title}
+            </div>
+            <div class="product-price">
+                ${CURRENCY_SYMBOL+product.price} 
+            </div>
+            <div class="favourite-wrapper">
+                <img src="./favourite.svg" />
+            </div>
         </div>`;
         console.log(listDiv);
         productsWrapper.appendChild(listDiv);
     }
-    setTotalProducts(products.length)
 }
-const setTotalProducts=(totalProducts)=>{
-    document.getElementById('total').innerText =`${totalProducts} results`;
+const buildCategories = ()=>{
+    categoriesWrapper.innerHTML="";
+    for(let product of masterProducts){
+        // Categories.
+        categoryIndex=categories.findIndex(category => product.category == category);
+        console.log(categoryIndex);
+        if(categoryIndex == -1){
+            categories.push(product.category);
+            const categoryLi = document.createElement("li");
+            categoryLi.innerHTML=`
+            <input type="checkbox" value="${product.category}" name="category" onChange="applyfilters()"> ${product.category} 
+            `;
+            categoriesWrapper.appendChild(categoryLi)
+        }
+    }
+}
+function toggleFilters(){
+    // let query = window.matchMedia("(min-width: 480px)");
+    // if(query.matches){
+        let categories = document.getElementById("categories");
+        //categories.style.display='none';
+        if(!categories.style.display || categories.style.display == 'none'){
+            categories.style.display='block';
+        }
+        else{
+            categories.style.display='none';
+        }
+    // }
+    console.log(categories.style.display);
+}
+const setTotalProducts=(total)=>{
+    totalResults.innerText =`${total} of ${products.length} results`;
+    totalProducts = total;
 }
 const bindSortOptions = ()=>{
     sortEle = document.querySelector("select[name=sorting");
@@ -133,18 +199,16 @@ const bindSortOptions = ()=>{
     }
 }
 const searchProduct = ()=>{
-    const searchKeyword = document.getElementById("search");
-    console.log(searchKeyword.value);
     let timeOutId;
     if(timeOutId)
         clearTimeout(timeOutId);
     timeOutId=setTimeout(()=>{
-        keywordSearch(searchKeyword.value)
+        applyfilters()
     },1000);
 }
-const keywordSearch=(key)=>{
-    products = masterProducts.filter((product)=>{
-        let someResp=Object.values(product).some(value =>{
+const keywordSearch=(key,inputObj={arrangeItems:true})=>{
+    products = products.filter((product)=>{
+        let someResp=Object.values({title:product.title, price:product.price, category: product.category}).some(value =>{
             matchRes=value.toString().toLowerCase().includes(key.toLowerCase());
             if(matchRes) 
                 return true; 
@@ -154,7 +218,30 @@ const keywordSearch=(key)=>{
         return someResp;
     });
     console.log(products);
-    buildProducts(products);
+    if(inputObj.arrangeItems){
+        arrangeItemsPerPage();
+    }
+}
+function loadmoreProducts (e){
+    e.preventDefault();
+    let moreProducts=[];
+    if(totalProducts + ITEMS_PER_PAGE < products.length ){
+        moreProducts = products.slice(totalProducts, ITEMS_PER_PAGE);
+    }
+    else{
+        moreProducts = products.slice(totalProducts, products.length);
+    }
+    buildProducts(moreProducts, false);
+    showHideLoadMore(products,totalProducts+moreProducts.length);
+}
+const showHideLoadMore = (originalProducts, total=totalProducts)=>{
+    if(originalProducts.length <= total){
+        loadMore.style.display='none'
+    }
+    else{
+        loadMore.style.display="block"
+    }
+    setTotalProducts(total)
 }
 const setError= (errorObj, errKey)=>{
     errorObj[errKey] = ERRORS[errKey];
