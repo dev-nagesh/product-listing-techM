@@ -1,3 +1,4 @@
+// Constants
 const PRODUCTS_API = "https://fakestoreapi.com/products";
 const ERRORS = {
     NO_DATA: "No Data found",
@@ -11,6 +12,8 @@ const SORT_OPTIONS=[
 ]
 const ITEMS_PER_PAGE = 10;
 const CURRENCY_SYMBOL= "$";
+// Constants
+//Variables
 let masterProducts=[];
 let products=[];
 let totalProducts=0;
@@ -20,18 +23,25 @@ let productsWrapper = document.querySelector(".list-wrapper");
 let categoriesWrapper = document.querySelector(".categories ul");
 let loadMore = document.getElementById("load-more");
 let totalResults = document.getElementById('total');
-console.log(productsWrapper);
+//console.log(productsWrapper);
 const listWrapper=document.querySelector('.list-wrapper');
 const listItem = document.querySelector(".list-item");
-console.log(listWrapper,listItem);
-for(i=0; i<10; i++){
+//Variables
+
+//Shimmer UI Nodes
+//console.log(listWrapper,listItem);
+for(let i=0; i<10; i++){
     listWrapper.append(listItem.cloneNode(true));
 }
+//Shimmer UI Nodes
+
 // let query = window.matchMedia("(min-width: 480px)");
 // if(query.matches){
 //     alert("Match")
 // }
-
+/**
+ * fetchProducts function is used to fetch the Products from API.
+ */
 const fetchProducts = async ()=>{
     try{
         const data = await fetch(PRODUCTS_API);
@@ -40,8 +50,8 @@ const fetchProducts = async ()=>{
             masterProducts = response;
             products = response;
             arrangeItemsPerPage();
-            console.log(products);
-            let list ='';
+            //console.log(products);
+            //let list ='';
             buildCategories();
 
         }
@@ -53,12 +63,16 @@ const fetchProducts = async ()=>{
         }
     }
     catch(error){
+        console.log(error);
         products_errors=setError(products_errors,'API_ERROR');
         products =[];
         masterProducts =[];
         displayErrors();
     }
 }
+/**
+ * applyfilters function is used to apply all filters such as filtering, searching and sorting
+ */
 function applyfilters(){
     // const formData = new FormData(filterform);
     // const formProps = Object.fromEntries(formData);
@@ -80,6 +94,10 @@ function applyfilters(){
     }
     arrangeItemsPerPage();
 }
+/**
+ * arrangeItemsPerPage function is used to configure only specific items per page
+ * @param {*} clearWrapper 
+ */
 const arrangeItemsPerPage = (clearWrapper)=>{
     let displayProducts = []
     if(products.length > ITEMS_PER_PAGE){
@@ -90,6 +108,11 @@ const arrangeItemsPerPage = (clearWrapper)=>{
     buildProducts(displayProducts,clearWrapper);
     showHideLoadMore(products,displayProducts.length);
 }
+/**
+ * applySorting is responsible for sorting the product items
+ * @param {*} sortOption 
+ * @param {*} inputObj 
+ */
 function applySorting(sortOption,inputObj={arrangeItems:true}){
     sortOption = document.querySelector('select[name=sorting]');
     switch(sortOption.value){
@@ -131,6 +154,11 @@ function applySorting(sortOption,inputObj={arrangeItems:true}){
         arrangeItemsPerPage(true);
     }
 }
+/**
+ * buildProducts function is used to bind the products to UI
+ * @param {*} products 
+ * @param {*} clearWrapper 
+ */
 const buildProducts = (products=masterProducts, clearWrapper=true)=>{
     if(clearWrapper){
         productsWrapper.innerText='';
@@ -159,11 +187,14 @@ const buildProducts = (products=masterProducts, clearWrapper=true)=>{
         productsWrapper.appendChild(listDiv);
     }
 }
+/**
+ * buildCategories is used to bind the categories to filters
+ */
 const buildCategories = ()=>{
     categoriesWrapper.innerHTML="";
     for(let product of masterProducts){
         // Categories.
-        categoryIndex=categories.findIndex(category => product.category == category);
+        let categoryIndex=categories.findIndex(category => product.category == category);
         console.log(categoryIndex);
         if(categoryIndex == -1){
             categories.push(product.category);
@@ -175,6 +206,9 @@ const buildCategories = ()=>{
         }
     }
 }
+/**
+ * toggleFilters function is used to hide/show the categories/filters
+ */
 function toggleFilters(){
     // let query = window.matchMedia("(min-width: 480px)");
     // if(query.matches){
@@ -191,20 +225,30 @@ function toggleFilters(){
     // }
     console.log(categories.style.display);
 }
+/**
+ * setTotalProducts is used to set the results count on UI
+ * @param {*} total 
+ */
 const setTotalProducts=(total)=>{
     totalResults.innerText =`${total} of ${products.length} results`;
     totalProducts = total;
 }
+/**
+ * bindSortOptions is used to bind the Sorting options from the constants
+ */
 const bindSortOptions = ()=>{
-    sortEle = document.querySelector("select[name=sorting");
+    let sortEle = document.querySelector("select[name=sorting");
     sortEle.innerHTML=`<option value=''>Select Sorting</option>`
-    for(option of SORT_OPTIONS){
-        optionEle = document.createElement("option");
+    for(let option of SORT_OPTIONS){
+        let optionEle = document.createElement("option");
         optionEle.value = `${option.value}`
         optionEle.innerText=`${option.title}`
         sortEle.appendChild(optionEle);
     }
 }
+/**
+ * searchProduct function is used debounce the keyword search
+ */
 const searchProduct = ()=>{
     let timeOutId;
     if(timeOutId)
@@ -213,6 +257,11 @@ const searchProduct = ()=>{
         applyfilters()
     },1000);
 }
+/**
+ * keywordSearch function is used to implement keyword search logic
+ * @param {keyw} key 
+ * @param {*} inputObj 
+ */
 const keywordSearch=(key,inputObj={arrangeItems:true})=>{
     products = products.filter((product)=>{
         let someResp=Object.values({title:product.title, price:product.price, category: product.category}).some(value =>{
@@ -229,6 +278,10 @@ const keywordSearch=(key,inputObj={arrangeItems:true})=>{
         arrangeItemsPerPage();
     }
 }
+/**
+ * loadmoreProducts is used to lazy load products
+ * @param {*} e 
+ */
 function loadmoreProducts (e){
     e.preventDefault();
     let moreProducts=[];
@@ -241,6 +294,11 @@ function loadmoreProducts (e){
     buildProducts(moreProducts, false);
     showHideLoadMore(products,totalProducts+moreProducts.length);
 }
+/**
+ * showHideLoadMore function is used to show/hide Load More text
+ * @param {*} originalProducts 
+ * @param {*} total 
+ */
 const showHideLoadMore = (originalProducts, total=totalProducts)=>{
     if(originalProducts.length <= total){
         loadMore.style.display='none'
@@ -250,10 +308,19 @@ const showHideLoadMore = (originalProducts, total=totalProducts)=>{
     }
     setTotalProducts(total)
 }
+/**
+ * setError is used to set the errors object
+ * @param {*} errorObj 
+ * @param {*} errKey 
+ * @returns 
+ */
 const setError= (errorObj, errKey)=>{
     errorObj[errKey] = ERRORS[errKey];
     return errorObj;
 }
+/**
+ * displayErrors function is used to bind the error messages to UI
+ */
 const displayErrors = ()=>{
     listWrapper.innerHTML="";
     let errorList = document.createElement("ul");
@@ -261,12 +328,14 @@ const displayErrors = ()=>{
     errorList.setAttribute("role","alert")  
     errorList.classList.add("errors-container");
     let errorListItems="";
-    for([key,value] of Object.entries(products_errors)){
+    for(let [key,value] of Object.entries(products_errors)){
         console.log(key,value);
         errorListItems= errorListItems +`<li>${value}</li>`;
     }
     errorList.innerHTML=errorListItems;
     listWrapper.appendChild(errorList);
 }
-fetchProducts();
-bindSortOptions();
+
+
+fetchProducts(); // invoking function for fetching products
+bindSortOptions(); // invoking function for defining sort options
