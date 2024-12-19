@@ -16,6 +16,7 @@ body{
         'header'
         'main';
     row-gap: 20px;
+    overflow-x: hidden;
 }
 header{
     grid-area: header;
@@ -261,4 +262,11 @@ main{
     100%{
         background-color: hsl(200, 20%, 70%);
     }
+}
+#load-more{
+    display:none;
+}
+.errors-container{
+    list-style: none;
+    color: red;
 }

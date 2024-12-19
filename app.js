@@ -48,12 +48,15 @@ const fetchProducts = async ()=>{
         else{
             products =[];
             masterProducts =[];
+            products_errors=setError(products_errors,'NO_DATA');
+            displayErrors();
         }
     }
     catch(error){
         products_errors=setError(products_errors,'API_ERROR');
         products =[];
         masterProducts =[];
+        displayErrors();
     }
 }
 function applyfilters(){
@@ -135,19 +138,21 @@ const buildProducts = (products=masterProducts, clearWrapper=true)=>{
     for(let product of products){
         const listDiv=document.createElement("div");
         listDiv.classList.add('list-item');
+        listDiv.setAttribute("role","listitem");
+        listDiv.setAttribute("tabIndex",0);
         listDiv.innerHTML=`
         <div class="product-image-container">
-            <img src="${product.image}" class="product-image">
+            <img alt="Product Image for ${product.title}" src="${product.image}" class="product-image">
         </div>
         <div class="product-info">
-            <div class="product-title">
+            <div class="product-title" aria-label="Title ${product.title}">
                 ${product.title}
             </div>
-            <div class="product-price">
+            <div class="product-price" aria-label="Price of the pruduct ${product.price} dollars">
                 ${CURRENCY_SYMBOL+product.price} 
             </div>
-            <div class="favourite-wrapper">
-                <img src="./favourite.svg" />
+            <div class="favourite-wrapper" tabIndex="0">
+                <img alt="Add to favourites" src="./favourite.svg"/>
             </div>
         </div>`;
         console.log(listDiv);
@@ -177,9 +182,11 @@ function toggleFilters(){
         //categories.style.display='none';
         if(!categories.style.display || categories.style.display == 'none'){
             categories.style.display='block';
+            categories.setAttribute('aria-expanded',true);
         }
         else{
             categories.style.display='none';
+            categories.setAttribute('aria-expanded',false);
         }
     // }
     console.log(categories.style.display);
@@ -246,6 +253,20 @@ const showHideLoadMore = (originalProducts, total=totalProducts)=>{
 const setError= (errorObj, errKey)=>{
     errorObj[errKey] = ERRORS[errKey];
     return errorObj;
+}
+const displayErrors = ()=>{
+    listWrapper.innerHTML="";
+    let errorList = document.createElement("ul");
+    errorList.setAttribute("aria-live","assertive");
+    errorList.setAttribute("role","alert")  
+    errorList.classList.add("errors-container");
+    let errorListItems="";
+    for([key,value] of Object.entries(products_errors)){
+        console.log(key,value);
+        errorListItems= errorListItems +`<li>${value}</li>`;
+    }
+    errorList.innerHTML=errorListItems;
+    listWrapper.appendChild(errorList);
 }
 fetchProducts();
 bindSortOptions();

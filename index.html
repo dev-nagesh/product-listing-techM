@@ -31,8 +31,8 @@
     </header>
     <main>
         <nav>
-            <div class="filter-header"><span class="material-icons" onClick="toggleFilters()">filter_alt</span>Filters</div> 
-            <div class="filter-container categories" id="categories">
+            <div class="filter-header" aria-label="Click to apply filters" role="button" tabindex="0"><span class="material-icons" onClick="toggleFilters()">filter_alt</span>Filters</div> 
+            <div class="filter-container categories" id="categories" aria-expanded="true">
                 <div class="filter-title">Categories</div>
                 <ul id="categories-filter"> 
                     <li class="skeleton skeleton-category"></li>
@@ -43,12 +43,12 @@
             </div>
         </nav>
         <section class="search-sort-container">
-            <div id="total">
+            <div id="total" aria-label="Total Products" aria-live="assertive">
             </div>
             <div class="search-container">
-                <input type="text" name="search" id="search" placeholder="Type Keyword.." onkeyup="searchProduct()">
+                <input type="text" aria-label="Type keyword to search products" name="search" id="search" placeholder="Search with Keyword.." onkeyup="searchProduct()" maxlength="40">
             </div>
-            <div class="sort-container">
+            <div class="sort-container" aria-label="Sort Options">
                 <div class="mobile-sort">
                     <span class="material-icons ">sort</span>
                 </div>
@@ -56,8 +56,8 @@
                 </select>
             </div>
         </section>
-        <div class="list-wrapper">
-            <div class="list-item">
+        <div class="list-wrapper" role="list">
+            <div class="list-item" role="listitem">
                 <div class="product-image-container skeleton">
                 </div>
                 <div class="product-info">
@@ -74,7 +74,7 @@
         <div id="advertisement">
 
         </div>
-        <a href="#" id="load-more" onclick="loadmoreProducts(event)">Load More..</a>
+        <a href="#" id="load-more" onclick="loadmoreProducts(event)" role="buttton" aria-label="Load more products">Load More..</a>
     </main>
 </body>
 </html>
