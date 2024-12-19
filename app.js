@@ -35,10 +35,15 @@ for(let i=0; i<10; i++){
 }
 //Shimmer UI Nodes
 
-// let query = window.matchMedia("(min-width: 480px)");
-// if(query.matches){
-//     alert("Match")
-// }
+/**
+ * cleanData  funciton is used to sanitize the input
+ * @param {*} input 
+ * @returns 
+ */
+const cleanData = (input)=>{
+    return DOMPurify.sanitize(input);
+}
+
 /**
  * fetchProducts function is used to fetch the Products from API.
  */
@@ -168,7 +173,7 @@ const buildProducts = (products=masterProducts, clearWrapper=true)=>{
         listDiv.classList.add('list-item');
         listDiv.setAttribute("role","listitem");
         listDiv.setAttribute("tabIndex",0);
-        listDiv.innerHTML=`
+        listDiv.innerHTML=cleanData(`
         <div class="product-image-container">
             <img alt="Product Image for ${product.title}" src="${product.image}" class="product-image">
         </div>
@@ -182,7 +187,7 @@ const buildProducts = (products=masterProducts, clearWrapper=true)=>{
             <div class="favourite-wrapper" tabIndex="0">
                 <img alt="Add to favourites" src="./favourite.svg"/>
             </div>
-        </div>`;
+        </div>`);
         console.log(listDiv);
         productsWrapper.appendChild(listDiv);
     }
@@ -199,9 +204,9 @@ const buildCategories = ()=>{
         if(categoryIndex == -1){
             categories.push(product.category);
             const categoryLi = document.createElement("li");
-            categoryLi.innerHTML=`
+            categoryLi.innerHTML=cleanData(`
             <input type="checkbox" value="${product.category}" name="category" onChange="applyfilters()"> ${product.category} 
-            `;
+            `);
             categoriesWrapper.appendChild(categoryLi)
         }
     }
@@ -238,7 +243,7 @@ const setTotalProducts=(total)=>{
  */
 const bindSortOptions = ()=>{
     let sortEle = document.querySelector("select[name=sorting");
-    sortEle.innerHTML=`<option value=''>Select Sorting</option>`
+    sortEle.innerHTML=cleanData(`<option value=''>Select Sorting</option>`);
     for(let option of SORT_OPTIONS){
         let optionEle = document.createElement("option");
         optionEle.value = `${option.value}`
@@ -332,7 +337,7 @@ const displayErrors = ()=>{
         console.log(key,value);
         errorListItems= errorListItems +`<li>${value}</li>`;
     }
-    errorList.innerHTML=errorListItems;
+    errorList.innerHTML=cleanData(errorListItems);
     listWrapper.appendChild(errorList);
 }
 
