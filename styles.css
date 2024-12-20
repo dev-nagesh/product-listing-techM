@@ -59,7 +59,7 @@ main{
     grid-template-areas: 'nav searchsort advertisement'
     'nav listwrapper advertisement'
     'nav loadmore advertisement';
-    /* gap: 20px; */
+    gap: 20px;
 }
 #advertisement{
     grid-area: advertisement;
@@ -110,6 +110,7 @@ main{
         'listwrapper'
         'loadmore';
         padding: 15px;
+        gap:0
     }
     body{
         row-gap: 0;
@@ -158,6 +159,7 @@ main{
         'listwrapper'
         'loadmore';
         padding: 15px;
+        gap:0;
     }
     body{
         row-gap: 0;
