@@ -35,14 +35,33 @@
     <main>
         <nav>
             <div class="filter-header" aria-label="Click to apply filters" role="button" tabindex="0"><span class="material-icons" onClick="toggleFilters()">filter_alt</span>Filters</div> 
-            <div class="filter-container categories" id="categories" aria-expanded="true">
-                <div class="filter-title">Categories</div>
-                <ul id="categories-filter"> 
-                    <li class="skeleton skeleton-category"></li>
-                    <li class="skeleton skeleton-category"></li>
-                    <li class="skeleton skeleton-category"></li>
-                    <li class="skeleton skeleton-category"></li>
-                </ul>
+            <div class="filter-container" id="filter-container">
+                <div class="categories" id="categories" aria-expanded="true">
+                    <div class="filter-title">Categories</div>
+                    <ul id="categories-filter"> 
+                        <li class="skeleton skeleton-category"></li>
+                        <li class="skeleton skeleton-category"></li>
+                        <li class="skeleton skeleton-category"></li>
+                        <li class="skeleton skeleton-category"></li>
+                    </ul>
+                </div>
+                <div class="filter-container price-filter" id="price-filter" >
+                    <div class="price-field">
+                        <span>Mini Price</span>
+                        <input type="number" 
+                            class="min-input" 
+                            value="0"
+                            min="10" max="5000">
+                    </div>
+                    <div class="price-field">
+                        <span>Max Price</span>
+                        <input type="number" 
+                            class="max-input" 
+                            value="10000"
+                            min="10" max="100000">
+                    </div>
+                    <div class="errors-container" id="price-error-message"></div>
+                </div>
             </div>
         </nav>
         <section class="search-sort-container">

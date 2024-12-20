@@ -45,10 +45,12 @@ nav ul{
     cursor: pointer;
 }
 .filter-container{
-    border-bottom: 1px solid black;
+    /* border-bottom: 1px solid black; */
     padding: 10px 0px;
 }
-
+.categories, .price-filter{
+    border-bottom: 1px solid black;
+}
 main{
     grid-area:main;
     display:grid;
@@ -57,7 +59,7 @@ main{
     grid-template-areas: 'nav searchsort advertisement'
     'nav listwrapper advertisement'
     'nav loadmore advertisement';
-    gap: 20px;
+    /* gap: 20px; */
 }
 #advertisement{
     grid-area: advertisement;
@@ -107,7 +109,10 @@ main{
         'searchsort'
         'listwrapper'
         'loadmore';
-        margin: 15px;
+        padding: 15px;
+    }
+    body{
+        row-gap: 0;
     }
     .list-wrapper{
         grid-template-columns: repeat(3,1fr);
@@ -115,7 +120,7 @@ main{
     .mobile-sort{
         display: inline !important;
     }
-    .categories{
+    .filter-container{
         display: none;
         position:absolute;
         z-index: 1;
@@ -152,7 +157,10 @@ main{
         'searchsort'
         'listwrapper'
         'loadmore';
-        margin: 15px;
+        padding: 15px;
+    }
+    body{
+        row-gap: 0;
     }
     .list-wrapper{
         grid-template-columns: repeat(2,1fr);
@@ -160,7 +168,7 @@ main{
     .mobile-sort{
         display: inline !important;
     }
-    .categories{
+    .filter-container{
         display: none;
         position:absolute;
         z-index: 1;
@@ -192,7 +200,7 @@ main{
         height: 23px;
     }
 }
-.categories{
+.filter-container{
     display: block;
 }
 .mobile-sort{
@@ -269,4 +277,11 @@ main{
 .errors-container{
     list-style: none;
     color: red;
+}
+.price-filter{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+}
+.price-field{
+    padding: 10px;
 }

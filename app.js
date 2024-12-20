@@ -2,7 +2,8 @@
 const PRODUCTS_API = "https://fakestoreapi.com/products";
 const ERRORS = {
     NO_DATA: "No Data found",
-    API_ERROR: "Something went wrong. Please try again.!"
+    API_ERROR: "Something went wrong. Please try again.!",
+    PRICE_FILTER_ERROR: "Price range is not valid"
 }
 const SORT_OPTIONS=[
     {value:"price-l-h", title:"Price: Low to High"},
@@ -19,6 +20,9 @@ let products=[];
 let totalProducts=0;
 let products_errors={};
 let categories=[];
+//Variables
+
+//HTML Elements
 let productsWrapper = document.querySelector(".list-wrapper");
 let categoriesWrapper = document.querySelector(".categories ul");
 let loadMore = document.getElementById("load-more");
@@ -26,7 +30,14 @@ let totalResults = document.getElementById('total');
 //console.log(productsWrapper);
 const listWrapper=document.querySelector('.list-wrapper');
 const listItem = document.querySelector(".list-item");
-//Variables
+const priceInputs = document.querySelectorAll(".price-filter input");
+//HTML Elements
+
+for (let i = 0; i < priceInputs.length; i++) {
+    priceInputs[i].addEventListener("input", e => {
+        applyfilters();
+    })
+}
 
 //Shimmer UI Nodes
 //console.log(listWrapper,listItem);
@@ -88,6 +99,9 @@ function applyfilters(){
     }
     else{
         products = masterProducts;
+    }
+    if(priceInputs){
+        applyPriceFilter();
     }
     const searchKeyword = document.getElementById("search");
     if(searchKeyword.value){
@@ -204,31 +218,32 @@ const buildCategories = ()=>{
         if(categoryIndex == -1){
             categories.push(product.category);
             const categoryLi = document.createElement("li");
-            categoryLi.innerHTML=cleanData(`
-            <input type="checkbox" value="${product.category}" name="category" onChange="applyfilters()"> ${product.category} 
-            `);
+            categoryLi.innerHTML=`<input type="checkbox" value="${product.category}" name="category" onchange="applyfilters()"> ${product.category}`;
             categoriesWrapper.appendChild(categoryLi)
         }
     }
 }
+
+
+
 /**
  * toggleFilters function is used to hide/show the categories/filters
  */
 function toggleFilters(){
     // let query = window.matchMedia("(min-width: 480px)");
     // if(query.matches){
-        let categories = document.getElementById("categories");
+        let filterContainer = document.getElementById("filter-container");
         //categories.style.display='none';
-        if(!categories.style.display || categories.style.display == 'none'){
-            categories.style.display='block';
-            categories.setAttribute('aria-expanded',true);
+        if(!filterContainer.style.display || filterContainer.style.display == 'none'){
+            filterContainer.style.display='block';
+            filterContainer.setAttribute('aria-expanded',true);
         }
         else{
-            categories.style.display='none';
-            categories.setAttribute('aria-expanded',false);
+            filterContainer.style.display='none';
+            filterContainer.setAttribute('aria-expanded',false);
         }
     // }
-    console.log(categories.style.display);
+    console.log(filterContainer.style.display);
 }
 /**
  * setTotalProducts is used to set the results count on UI
@@ -283,6 +298,22 @@ const keywordSearch=(key,inputObj={arrangeItems:true})=>{
         arrangeItemsPerPage();
     }
 }
+/**
+ * applyPriceFilter function is to apply price filters
+ */
+const applyPriceFilter=()=>{
+    document.getElementById("price-error-message").innerText='';
+    const min = parseInt(priceInputs[0].value);
+    const max = parseInt(priceInputs[1].value);
+    console.log(min, max)
+    if(min < max){
+        products = products.filter(product => product.price >= min && product.price <= max);
+    }
+    else{
+        document.getElementById("price-error-message").innerText=ERRORS.PRICE_FILTER_ERROR;
+    }
+}
+
 /**
  * loadmoreProducts is used to lazy load products
  * @param {*} e 
