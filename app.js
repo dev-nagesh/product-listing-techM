@@ -31,6 +31,7 @@ let totalResults = document.getElementById('total');
 const listWrapper=document.querySelector('.list-wrapper');
 const listItem = document.querySelector(".list-item");
 const priceInputs = document.querySelectorAll(".price-filter input");
+const mobileMenuContainer = document.querySelector(".mobile-menu-container")
 //HTML Elements
 
 for (let i = 0; i < priceInputs.length; i++) {
@@ -233,6 +234,7 @@ function toggleFilters(){
     // let query = window.matchMedia("(min-width: 480px)");
     // if(query.matches){
         let filterContainer = document.getElementById("filter-container");
+        filterContainer.classList.toggle("show-mobile-filters")
         //categories.style.display='none';
         if(!filterContainer.style.display || filterContainer.style.display == 'none'){
             filterContainer.style.display='block';
@@ -371,7 +373,13 @@ const displayErrors = ()=>{
     errorList.innerHTML=cleanData(errorListItems);
     listWrapper.appendChild(errorList);
 }
-
+const toggleMobileMenu = ()=>{
+    mobileMenuContainer.classList.add("show")
+}
+const closeBtn = document.querySelector("#close-button");
+closeBtn.addEventListener("click", () => {
+    mobileMenuContainer.classList.toggle("show")
+});
 
 fetchProducts(); // invoking function for fetching products
 bindSortOptions(); // invoking function for defining sort options
