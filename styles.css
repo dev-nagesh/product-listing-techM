@@ -12,18 +12,61 @@ body{
     margin:0px;
     padding:0px;
     display:grid;
-    width: 100vw;
+    /* width: 100vw; */
     height:100vh;
     background-color: white;
     grid-template-columns: 1fr;
-    grid-template-rows: 0.1fr 1fr auto auto;
+    grid-template-rows: 0.1fr auto 1fr auto auto;
     grid-template-areas: 
         'header'
+        'banner'
         'main'
         'footer'
         'copyright';
     row-gap: 20px;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
+}
+.banner-wrapper{
+    grid-area: banner;
+    position: relative;
+    margin-bottom: 20px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 350px;
+    top:-20px;
+}
+.banner-wrapper .category-title{
+    position: relative;
+    width: 30%;
+    background-color: #000000;
+    text-align: right;
+    margin: -10px 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+.banner-wrapper .category-title h2{
+    color: #FFFFFF;
+    font-size: 48px;
+    line-height: 60px;
+    max-width: 300px;
+    font-family: "Source Serif 4", serif;
+    font-weight: 600;
+    margin: 0 auto;
+    text-align: center;
+}
+.banner-wrapper .category-image{
+    position: relative;
+    width: 70%;
+    height: 350px;
+    /* top:-10px */
+}
+.banner-wrapper .category-image img{
+    width: 100%;
+    margin-top: 10px;
+    height: 330px;
 }
 header{
     grid-area: header;
@@ -153,12 +196,17 @@ nav ul{
 }
 .filter-header{
     border-bottom: 1px solid black;
-    padding: 10px 0px;
+    padding: 10px;
     cursor: pointer;
 }
 .filter-container{
     /* border-bottom: 1px solid black; */
     padding: 10px 0px;
+    display: flex;
+    flex-direction: column;
+}
+.categories{
+    padding: 10px;
 }
 .categories, .price-filter{
     border-bottom: 1px solid black;
@@ -213,10 +261,65 @@ main{
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
 }
+@media (max-width: 991px) {
+    
+    .filter-container{
+        display: block;
+    }
+    /* .mobile-menu-icon{
+        display: block;
+    }
+    .menu-container{
+        display: none !important;
+    } */
+    .banner-wrapper {
+        /* height: 50%; */
+        flex-direction: column-reverse;
+    }
+    .banner-wrapper .category-image {
+        width: 100%;
+    }
+    .banner-wrapper .category-image img {
+        margin: 0;
+        height: 100%;
+    }
+    .banner-wrapper .category-title {
+        width: 80%;
+        margin: -30px auto 0;
+        z-index: 2;
+    }
+    .filter-container{
+        display:block;
+    }
+}
+@media (max-width: 1440px) {
+    /* .banner-wrapper .category-image {
+        height: 220px;
+    }
+    .banner-wrapper .category-image img {
+        height: 200px;
+    }
+    .banner-wrapper {
+        height: 220px;
+    }
+    .categoryTopSection .menCateory h2 {
+        font-size: 40px;
+        line-height: 52px;
+        max-width: 280px;
+    } */
+    .filter-container{
+        display:block;
+    }
+}
+@media (max-width: 575px) {
+    .banner-wrapper .category-title {
+        width: 92%;
+    }
+}
 @media(max-width: 768px){
     main{
         grid-template-columns: 1fr;
-        grid-template-rows: 0.05fr 0.05fr 1fr 0.05fr;
+        grid-template-rows: 0.02fr 0.03fr 1fr 0.05fr;
         grid-template-areas: 'nav'
         'searchsort'
         'listwrapper'
@@ -229,6 +332,9 @@ main{
     }
     main nav{
         padding: 0px;
+    }
+    .banner-wrapper {
+        top:0px;
     }
     /* .list-wrapper{
         grid-template-columns: repeat(2,1fr);
@@ -248,7 +354,10 @@ main{
         width: 100%;
         /* border: 1px solid gray; */
         box-shadow: 5px 5px 5px 5px gray;
-        padding: 25px;
+        /* padding: 25px; */
+    }
+    .filter-header{
+        padding:0px;
     }
     nav{
         padding: 0;
@@ -260,6 +369,7 @@ main{
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr 1fr;
         grid-template-areas: 'searchcontainer sortcontainer' 'total total';
+        row-gap:10px;
     }
     .sort-container{
         display:flex ;
@@ -281,7 +391,7 @@ main{
 @media screen and(max-width: 480px){
     main{
         grid-template-columns: 1fr;
-        grid-template-rows: 0.05fr 0.05fr 1fr 0.05fr;
+        grid-template-rows: 0.01fr 0.03fr 1fr 0.05fr;
         grid-template-areas: 'nav'
         'searchsort'
         'listwrapper'
@@ -313,8 +423,11 @@ main{
         width: 100%;
         /* border: 1px solid gray; */
         box-shadow: 5px 5px 5px 5px gray;
-        padding: 25px;
+        /* padding: 25px; */
 
+    }
+    .filter-header{
+        padding:0px;
     }
     nav{
         padding: 0;
@@ -347,9 +460,6 @@ main{
     header nav{
         padding: 25px;
     }
-}
-.filter-container{
-    display: block;
 }
 .mobile-sort{
     display: none;

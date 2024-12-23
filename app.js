@@ -234,10 +234,10 @@ function toggleFilters(){
     // let query = window.matchMedia("(min-width: 480px)");
     // if(query.matches){
         let filterContainer = document.getElementById("filter-container");
-        filterContainer.classList.toggle("show-mobile-filters")
+        //filterContainer.classList.toggle("show-mobile-filters")
         //categories.style.display='none';
         if(!filterContainer.style.display || filterContainer.style.display == 'none'){
-            filterContainer.style.display='block';
+            filterContainer.style.display='flex';
             filterContainer.setAttribute('aria-expanded',true);
         }
         else{
